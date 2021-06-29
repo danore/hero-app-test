@@ -25,6 +25,7 @@ class HeroDb: Object {
     @objc dynamic var appearance: AppearanceDb?
     @objc dynamic var work: WorkDb?
     @objc dynamic var connection: ConnectionDb?
+    var isFavorite: Bool = false
     
     override class func primaryKey() -> String? {
         return "id"
@@ -49,6 +50,6 @@ extension HeroDb {
         self.power = powerstats["power"].intValue
         self.combat = powerstats["combat"].intValue
         self.name = json["name"].stringValue
-        self.image = json["image"][0].stringValue
+        self.image = json["image"]["url"].stringValue
     }
 }

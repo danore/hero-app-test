@@ -12,7 +12,7 @@ class NetworkManager {
     func request(_ uri: String, params: [String: Any]? = nil, queryParams: String? = nil, method: HttpMethod, completion: @escaping (Data?) -> ()) {
         let customUrl = queryParams == nil ? uri : "\(uri)\(queryParams!)"
         
-        guard let components = URLComponents(string: customUrl) else {
+        guard let components = URLComponents(string: customUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) else {
             fatalError("Invalid URL")
         }
         

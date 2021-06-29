@@ -1,18 +1,16 @@
 //
-//  HeroView.swift
+//  SearchView.swift
 //  hero-app
 //
-//  Created by Daniel Orellana on 24/06/21.
+//  Created by Daniel Orellana on 28/06/21.
 //
 
 import Foundation
 import UIKit
 
-class HeroView: MainView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate, UISearchResultsUpdating {
+class FavoriteView: MainView, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    
-    lazy var searchBar:UISearchBar = UISearchBar()
     
     let heroVM = HeroViewModel()
     
@@ -22,23 +20,20 @@ class HeroView: MainView, UITableViewDelegate, UITableViewDataSource, UISearchBa
         self.initialize()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.initialize()
+    }
+    
     private func initialize() {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.register(UINib(nibName: "\(CellView.self)", bundle: nil), forCellReuseIdentifier: "cell")
-
-        self.modifiyView()
-    }
-    
-    private func modifiyView() {
-        searchBar.searchBarStyle = UISearchBar.Style.prominent
-        searchBar.placeholder = "Buscar..."
-        searchBar.sizeToFit()
-        searchBar.isTranslucent = false
-        searchBar.backgroundImage = UIImage()
-        searchBar.delegate = self
-        navigationItem.titleView = searchBar
+        
+        self.heroVM.getHeros()
+        self.tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -72,19 +67,6 @@ class HeroView: MainView, UITableViewDelegate, UITableViewDataSource, UISearchBa
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange textSearched: String) {
-        self.heroVM.search(textSearched) { response in
-            print(self.heroVM.list.count)
-            print(response)
-            self.tableView.reloadData()
-        } onFailure: { error in
-            self.showError(error)
-        }
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
     }
     
 }
